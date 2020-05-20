@@ -1,25 +1,57 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import './components/To_do.js';
+import Todo from "./components/To_do";
+import Form from "./components/Form";
+import TodoItemList from "./components/TodoItemList";
+
 
 function App() {
+
+    const [ todosState, settodosState ] = useState({
+        input: '',
+        todos: [
+            {id: 0, text: ' 리액트 소개', checked: false},
+            {id: 1, text: ' 리액트 소개', checked: true},
+            {id: 2, text: ' 리액트 소개', checked: false}
+        ]
+    });
+
+
+    const handleChange = (e) => {
+        settodosState({
+            input: e.target.value
+        });
+    };
+
+    const handleCreate = ({input, todos}) => {
+        settodosState({
+            input: '',
+            todos: todosState.todos.concat({
+                id: handleCreate.id++,
+                text: input,
+                checked: false
+            })
+        });
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleCreate();
+        }
+    };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Todo form={(
+          <Form
+              value={App.input}
+              onKeyPress={handleKeyPress}
+              onChange={handleChange}
+              onCreat={handleCreate}
+          />
+      )}>
+          <TodoItemList todos={todosState}/>
+      </Todo>
   );
 }
 
